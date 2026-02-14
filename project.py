@@ -22,16 +22,43 @@ def parse_equation(equation):
 
     return reactants, products
 
-def count_atoms(compound):
-    pattern = r"([A-Z][a-z]?)(\d*)"
-    matches = re.findall(pattern, compound)
+def count_atoms(formula):
+    stack = [{}]
+    i = 0
 
-    atoms = {}
-    for element, count in matches:
-        count = int(count) if count else 1
-        atoms[element] = atoms.get(element, 0) + count
+    while i < len(formula):
+        if formula[i] == "(":
+            stack.append({})
+            i += 1
 
-    return atoms
+        elif formula[i] == ")":
+            i += 1
+            num = ""
+            while i < len(formula) and formula[i].isdigit():
+                num += formula[i]
+                i += 1
+            multiplier = int(num) if num else 1
+
+            top = stack.pop()
+            for element in top:
+                top[element] *= multiplier
+
+            for element, count in top.items():
+                stack[-1][element] = stack[-1].get(element, 0) + count
+
+        else:
+            match = re.match(r"([A-Z][a-z]?)(\d*)", formula[i:])
+            if not match:
+                raise ValueError("invalid format :(")
+
+            element, num = match.groups()
+            count = int(num) if num else 1
+
+            stack[-1][element] = stack[-1].get(element, 0) + count
+
+            i += len(match.group(0))
+
+    return stack[0]
 
 def balance_equation(equation):
     reactants, products = parse_equation(equation)
