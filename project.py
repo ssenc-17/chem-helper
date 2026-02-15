@@ -1,6 +1,11 @@
 import re
 from sympy import Matrix, lcm
 
+SUBSCRIPT_MAP = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+
+def format_compound(compound):
+    return compound.translate(SUBSCRIPT_MAP)
+
 def main():
     equation = input("enter your unbalanced chemical equation!! ")
     
@@ -95,11 +100,13 @@ def balance_equation(equation):
 
     for i, compound in enumerate(compounds):
         coefficient = coeffs[i]
-        
+        formatted = format_compound(compound)
+
         if coefficient == 1:
-            result.append(compound)
+            result.append(formatted)
+        
         else:
-            result.append(f"{coefficient}{compound}")
+            result.append(f"{coefficient}{formatted}")
 
     return " + ".join(result[:len(reactants)]) + " -> " + " + ".join(result[len(reactants):])
 
