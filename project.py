@@ -174,28 +174,45 @@ class ChemBalancerGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("🧪 Chemical Equation Balancer")
-        self.root.geometry("600x300")
+        self.root.geometry("650x250")
         self.root.resizable(False, False)
 
         tk.Label(root, text="enter your unbalanced chemical equation!!", font=("Consolas", 12)).pack(pady=10)
-        self.entry = tk.Entry(root, font=("Consolas", 14), width=50)
-        self.entry.pack(pady=5)
-        
-        tk.Button(root, text="Balance", font=("Consolas", 12), bg="#4CAF50", fg="white", command=self.balance).pack(pady=10)
-        
-        self.output = tk.Label(root, text="", font=("Consolas", 14), fg="blue", wraplength=550)
+
+        input_frame = tk.Frame(root)
+        input_frame.pack(pady=5)
+
+        react_frame = tk.Frame(input_frame)
+        react_frame.grid(row=0, column=0, padx=10)
+        tk.Label(react_frame, text="reactants", font=("Consolas", 10)).pack()
+        self.react_entry = tk.Entry(react_frame, font=("Consolas", 14), width=25)
+        self.react_entry.pack()
+
+        tk.Label(input_frame, text="→", font=("Consolas", 20)).grid(row=0, column=1, padx=5)
+
+        prod_frame = tk.Frame(input_frame)
+        prod_frame.grid(row=0, column=2, padx=10)
+        tk.Label(prod_frame, text="products", font=("Consolas", 10)).pack()
+        self.prod_entry = tk.Entry(prod_frame, font=("Consolas", 14), width=25)
+        self.prod_entry.pack()
+
+        tk.Button(root, text="balance", font=("Consolas", 12), bg="#4CAF50", fg="white", command=self.balance).pack(pady=10)
+
+        self.output = tk.Label(root, text="", font=("Consolas", 14), fg="blue", wraplength=600)
         self.output.pack(pady=20)
 
     def balance(self):
-        equation = self.entry.get()
-        if not equation.strip():
-            messagebox.showwarning("oops!", "hey! you gotta type an equation first!!")
+        reactants = self.react_entry.get()
+        products = self.prod_entry.get()
+        if not reactants.strip() or not products.strip():
+            messagebox.showwarning("hey!", "you gotta enter both reactants and products!")
             return
         try:
+            equation = reactants + "->" + products
             balanced = balance_equation(equation)
             self.output.config(text=balanced)
         except Exception as e:
-            messagebox.showerror("oops!", f"oops! invalid equation :(\n{e}")
+            messagebox.showerror("oops!", f"invalid equation :(\n{e}")
             self.output.config(text="")
 
 if __name__ == "__main__":
