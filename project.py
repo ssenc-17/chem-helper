@@ -181,11 +181,11 @@ class SubscriptEntry(tk.Entry):
 class MainMenuGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("🧪 chemistry toolkit 🧪")
+        self.root.title("🧪 chem-helper 🧪")
         self.root.geometry("500x300")
         self.root.resizable(False, False)
         
-        tk.Label(root, text="🧪 chemistry toolkit 🧪", font=("Consolas", 18, "bold")).pack(pady=30)
+        tk.Label(root, text="🧪 chem-helper 🧪", font=("Consolas", 18, "bold")).pack(pady=30)
         tk.Label(root, text="choose your tool:", font=("Consolas", 12)).pack(pady=10)
         btn_frame = tk.Frame(root)
         btn_frame.pack(pady=20)
